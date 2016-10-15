@@ -1,3 +1,4 @@
+@file:JvmName("Main")
 package com.andrewrds.fx
 
 import com.google.gson.JsonObject
