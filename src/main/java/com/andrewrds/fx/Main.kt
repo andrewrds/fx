@@ -42,25 +42,19 @@ private fun retrieveRate(ccy1: String, ccy2: String): BigDecimal {
 
 // Get rate from Json
 private fun extractJsonRate(connection: HttpURLConnection, ccy: String): BigDecimal {
-    val reader = BufferedReader(InputStreamReader(connection.inputStream, "UTF-8"))
-    try {
-        val jsonObject: JsonObject? = JsonParser().parse(reader).asJsonObject
+   connection.inputStream.bufferedReader().use {
+        val jsonObject: JsonObject? = JsonParser().parse(it).asJsonObject
         val rates: JsonObject? = jsonObject?.getAsJsonObject("rates")
         return rates?.get(ccy)?.asBigDecimal ?: throw IOException("No rate information for $ccy")
-    } finally {
-        reader.close()
     }
 }
 
 // Get the error message from Json
 private fun handleJsonError(connection: HttpURLConnection): BigDecimal {
-    val reader = BufferedReader(InputStreamReader(connection.errorStream, "UTF-8"))
-    try {
-        val jsonObject: JsonObject? = JsonParser().parse(reader).asJsonObject
+    connection.errorStream.bufferedReader().use {
+        val jsonObject: JsonObject? = JsonParser().parse(it).asJsonObject
         val errorString = jsonObject?.get("error")
         throw IOException("Failure reading exchange rate: $errorString")
-    } finally {
-        reader.close()
     }
 }
 
