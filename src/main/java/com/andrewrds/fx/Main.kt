@@ -12,6 +12,8 @@ import java.net.URL
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    validateArgs(args)
+
     try {
         val parsedArgs = Args(args)
         val rate = retrieveRate(parsedArgs.ccy1, parsedArgs.ccy2)
@@ -19,6 +21,13 @@ fun main(args: Array<String>) {
         println(convertedAmount)
     } catch (e: Throwable) {
         System.err.println(e)
+        exitProcess(-1)
+    }
+}
+
+private fun validateArgs(args: Array<String>) {
+    if (args.size < 2) {
+        System.err.println("Expected parameters [amount] currency1 currency2")
         exitProcess(-1)
     }
 }
